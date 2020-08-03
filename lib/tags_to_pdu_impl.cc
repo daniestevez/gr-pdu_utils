@@ -281,20 +281,8 @@ int tags_to_pdu_impl<T>::work(int noutput_items,
                     publish_message();
                 }
 
-                // if we have received a second SOB tag, reset and dump previous data
+                // if we have received a second SOB tag, ignore it
             } else if (d_tag_type == SOB) {
-                GR_LOG_ERROR(this->d_logger,
-                             boost::format("SOB tag received during burst %d at offset "
-                                           "%d, previous burst dropped (%d tags total)") %
-                                 d_burst_counter % d_tag.offset % d_tags.size());
-
-                // prepare for next burst
-                d_burst_counter++;
-                d_triggered = false;
-                d_vector.clear();
-
-                // do not consume SOB item so it can be handled next work() call
-                consumed--;
             }
 
             // otherwise, consume data and evaluate if we need to publish a message
